@@ -1,0 +1,687 @@
+---
+title: "Some Bookdown Features"
+author: "Alan T. Arnholt"
+date: 'Last compiled: `r format(Sys.time(), "%B %d, %Y")`'
+output: bookdown::html_document2
+bibliography: [Alayna.bib, packages.bib]
+link-citations: true
+csl: apa.csl
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA, message = FALSE, warning = FALSE)
+library(ggplot2)
+library(plotly)
+library(tidyverse)
+library(lubridate)
+library(zoo)  # for rollmean
+```
+
+# **R** Code and labels
+
+There are two types of **R** code in R Markdown documents: **R** code chunks, and inline **R** code. The syntax for inline **R** code is `` ``r ''`r R_CODE` ``, and it can be embedded inline with other document elements. **R** code chunks look like plain code blocks, but have `{r}` after the three backticks and (optionally) chunk options inside `{}`, e.g.,
+
+````markdown
+`r ''````{r, eval = FALSE}
+rn <- rnorm(1000, 100, 15)
+(mean(rn))
+(sd(rn))
+```
+````
+
+
+When the previous code is evaluated, random numbers are generated from a $\mathcal{N}(\mu = 100, \sigma = 15)$ distribution.  In line codes `` ``r ''`r round(mean(rn),2)` `` and `` ``r ''`r round(sd(rn),2)` `` are used to compute and round the mean and standardard deviation of `rn` to two decimal places, respectively.
+
+```{r}
+rn <- rnorm(1000, 100, 15)
+(mean(rn))
+(sd(rn))
+```
+
+The mean of `rn` rounded to two decimal places is `r round(mean(rn),2)`, while the standard deviation of `rn` rounded to two decimal places is `r round(sd(rn),2)`.
+
+If you have used $\LaTeX{}$, inserting beautiful mathematics in your documents should not be an issue.  There are a couple of differences when labeling an equation that are needed in **bookdown** [@R-bookdown] so that one of the several types of documents that are possible to create from R Markdown work properly. To number an equation, enclose the equation in an equation environment and assign a label to the equation using the syntax `(\#eq:label)`. Equation labels must start with the prefix `eq:` in bookdown. To refer to the equation, use the syntax `\@ref(eq:label)`.  For example: 
+
+```{r, eval = FALSE}
+\begin{equation}
+\bar{x} = \sum_{i=1}^{n}\frac{x_i}{n}
+(\#eq:xbar)
+\end{equation}
+```
+
+renders equation \@ref(eq:xbar).
+
+\begin{equation}
+\bar{x} = \sum_{i=1}^{n}\frac{x_i}{n}
+(\#eq:xbar)
+\end{equation}
+
+A slighlty more complex example showing the intermediate numbers used to compute the mean (from inline **R** code) for the values stored in `rn` is given below and rendered in \@ref(eq:numbers).
+
+```{r, eval = FALSE}
+\begin{equation}
+\bar{x} = \sum_{i=1}^{n}\frac{x_i}{n} = \frac{`r sum(rn)`}{`r length(rn)`} = `r mean(rn)`
+(\#eq:numbers)
+\end{equation}
+```
+
+\begin{equation}
+\bar{x} = \sum_{i=1}^{n}\frac{x_i}{n} = \frac{`r sum(rn)`}{`r length(rn)`} = `r mean(rn)`
+(\#eq:numbers)
+\end{equation}
+
+
+## Graph with a caption
+
+The following code was used to create Figure \@ref(fig:histo).  When creating Figures make sure to use a `label` inside your R code chunk.  To refer to the Figure use the syntax `\@ref(fig:label)`.
+
+````markdown
+`r ''````{r, label = "histo", fig.cap = "Histogram of 1000 randomly generated values from a N(100, 15) distribution", echo = FALSE}
+hist(rn, main = "", xlab = "", col = "pink")
+```
+````
+
+```{r, label = "histo", fig.cap = "Histogram of 1000 randomly generated values from a N(100, 15) distribution", echo = FALSE}
+hist(rn, main = "", xlab = "", col = "pink")
+```
+
+
+## Tables
+
+Table \@ref(tab:FT) was created using the **R** code chunk and code below.  Note that to refer to Table \@ref(tab:FT), the name of the code chunk label is used.  In this case, the code chunk label is `FT` and to refer to Table \@ref(tab:FT) one uses the syntax `\@ref(tab:FT)`.
+
+````markdown
+`r ''````{r, label = "FT", echo = FALSE}
+    knitr::kable(head(iris), booktabs = TRUE,  caption = 'The first six rows of `iris`')
+```
+````
+
+
+```{r, label = "FT", echo = FALSE}
+knitr::kable(head(iris), booktabs = TRUE,  caption = 'The first six rows of `iris`')
+```  
+
+
+# Citations and creation of `*.bib` files
+
+One way to create a `*.bib` file is to use [zotero](https://www.zotero.org/).  It is also possible to create `*.bib` files for **R** and **R** packages using the following code:
+
+````markdown
+`r ''````{r, echo = FALSE, results = "hide"}
+# Create vector of packages you use
+PackagesUsed <- c("ggplot2", "bookdown", "knitr", "base", "dplyr", "zoo", "plotly", "lubridate")
+# Write bib information---NOTE: packages.bib is stored in the working directory
+knitr::write_bib(PackagesUsed, file = "./packages.bib")
+# Load packages
+lapply(PackagesUsed, library, character.only = TRUE)
+```
+````
+
+
+```{r, echo = FALSE, results = "hide"}
+# Create vector of packages you use
+PackagesUsed <- c("ggplot2", "bookdown", "knitr", "base", "dplyr", "zoo", "plotly", "lubridate")
+# Write bib information---NOTE: packages.bib is stored in the working directory
+knitr::write_bib(PackagesUsed, file = "./packages.bib")
+# Load packages
+lapply(PackagesUsed, library, character.only = TRUE)
+```
+
+The first three entries of the `packages.bib` file are shown below.
+
+```{r, eval = FALSE}
+@Manual{R-base,
+  title = {R: A Language and Environment for Statistical Computing},
+  author = {{R Core Team}},
+  organization = {R Foundation for Statistical Computing},
+  address = {Vienna, Austria},
+  year = {2018},
+  url = {https://www.R-project.org/},
+}
+@Manual{R-bookdown,
+  title = {bookdown: Authoring Books and Technical Documents with R Markdown},
+  author = {Yihui Xie},
+  year = {2020},
+  note = {R package version 0.19},
+  url = {https://CRAN.R-project.org/package=bookdown},
+}
+@Manual{R-dplyr,
+  title = {dplyr: A Grammar of Data Manipulation},
+  author = {Hadley Wickham and Romain François and Lionel Henry and Kirill Müller},
+  year = {2020},
+  note = {R package version 0.8.5},
+  url = {https://CRAN.R-project.org/package=dplyr},
+}
+```
+
+Citations go inside square brackets and are separated by semicolons. Each citation must have a key, composed of `@` + the citation identifier from the database, and may optionally have a prefix, a locator, and a suffix.  See [here](https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html) for examples.  This document of course relies on **R**  [@R-base] as well as many other packages. The citation [@R-base] was created with `[@R-base]`.
+
+
+The structure of phenotypic personality traits is addressed in @goldberg_structure_1993 while @ridderinkhof_role_2004 discusses the role of the medial frontal cortex in cognitive control.  I really have no idea what @hooker_influence_2008 says about fear and reward learning but @nowakowska_temperamental_2005 does shed some light on temperamental commonalities for moody patients.  The citations @goldberg_structure_1993, @ridderinkhof_role_2004, @hooker_influence_2008, and @nowakowska_temperamental_2005 were created with `@goldberg_structure_1993`, `@ridderinkhof_role_2004`, `@hooker_influence_2008`, and `@nowakowska_temperamental_2005`.
+
+
+## The YAML{-}
+
+Citations will only work if your `*.bib` files are included in the YAML.  Note in the example below that there are two `*.bib` files.  By default, pandoc will use a Chicago author-date format for citations and references. To use another style, you will need to specify a CSL 1.0 style file in the `csl` metadata field. In the example below, the `apa.csl` is used.  CSL files may be downloaded from [https://www.zotero.org/styles](https://www.zotero.org/styles).  Make sure to store the CSL file in your working directory or specify the path to the CSL file in the metadata field of your YAML.   
+
+```{r, eval = FALSE}
+---
+title: "Some Bookdown Features"
+author: "Alan T. Arnholt"
+date: 'Last compiled: `r format(Sys.time(), "%B %d, %Y")`'
+output: bookdown::html_document2
+bibliography: [Alayna.bib, packages.bib]
+link-citations: true
+csl: apa.csl
+---
+```
+
+
+
+
+# A **ggplot2/plotly** graph
+
+Figure \@ref(fig:gp1) is a plotly graph that was converted from a ggplot2 graph.  Make sure to give credit package authors when using packages.  In this section, we use **ggplot2** [@R-ggplot2] and **plotly** [@R-plotly] to create Figure \@ref(fig:gp1).  
+
+```{r, label = "gp1", fig.cap = "The standard **ggplot2** scatter plot"}
+p1 <- ggplot(data = mtcars, aes(x = disp, y = mpg)) + 
+  geom_point(aes(color = as.factor(cyl))) + 
+  geom_smooth(formula = y~x, se = FALSE) +
+  labs(color = "Cylinders") +
+  theme_bw()
+p2 <- ggplotly(p1)
+p2
+```
+
+# Covid-19 data
+
+**Note:** The majority of the covid code and ideas were taken from [https://www.sharpsightlabs.com/blog/](https://www.sharpsightlabs.com/blog/).
+
+Obtaining the data compiled by the Center for Systems Science and Engineering [(CSSE)](https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series) team at John Hopkins.
+
+```{r}
+today <- Sys.Date()  # return current date as class Date
+# will use (today - 1) as download files are generally one day behind actual dates
+# CSSEGIS files are actually updated once a day around 23:59 (UTC)
+url <- 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv'
+covid_data_RAW <- read_csv(url)
+# rename
+covid_data_RAW %>% 
+  rename('subregion' = `Province/State` 
+         ,'country' = 'Country/Region'
+         ,'lat' = 'Lat'
+         ,'long' = 'Long'
+         ) ->
+  covid_data
+# Reshape data
+covid_data %>% 
+  pivot_longer(cols = -one_of('country', 'subregion', 'lat', 'long'),
+               names_to = 'date', 
+               values_to = 'confirmed') ->
+  covid_data
+# reorder columns
+# NOTE: everything(): Matches all variables.
+covid_data %>% 
+  select(country, subregion, everything()) ->
+  covid_data
+# convert date
+# labridate::mdy()  month-day-year string to R dates
+covid_data %>% 
+  mutate(date = mdy(date)) ->
+  covid_data
+#
+covid_data %>% 
+  select(country, date, confirmed) %>% 
+  filter(country %in% c('US', 'Spain', 'United Kingdom', 'Italy')) %>% 
+  filter(date == (today - 1)) %>% 
+  group_by(country, date) %>% 
+  summarise(total_confirmed = sum(confirmed))
+```
+
+
+```{r}
+covid_data %>% 
+  filter(date == (today - 1)) %>% 
+  select(country, confirmed) %>% 
+  group_by(country) %>% 
+  summarise(confirmed = sum(confirmed)) %>% 
+  arrange(desc(confirmed)) %>% 
+  top_n(10) %>% 
+  ggplot(aes(y = fct_reorder(country, confirmed), x = confirmed)) +
+    geom_bar(stat = 'identity', fill = "lightblue", color = "blue") +
+    labs(y = '') + 
+    theme_bw()
+```
+
+## Verify numbers with COVID-19 Dashboard
+
+COVID-19 Dashboard by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University.
+
+```{r, echo = FALSE}
+knitr::include_url("https://coronavirus.jhu.edu/map.html", height = "600px")
+```
+
+
+## Grabbing all of the important data
+
+We need to get two additional streams of data the "deaths" and "recovered" cases and wrangle those data sets into tidy tibbles.  To do this we will write functions that follow the basic structure for tidying the "confirmed" cases.  There will be a suite a functions to rename columns, "gather" data, convert dates, rearrange columns, read csv files, and merge data.
+
+### Rename columns
+
+```{r}
+covid_rename_columns <- function(input_data){
+  input_data %>% 
+    dplyr::rename('subregion' = 'Province/State',
+                  'country' = 'Country/Region',
+                  'lat' = 'Lat',
+                  'long' = 'Long') ->
+    output_data
+return(output_data)
+}
+```
+
+### Gather data
+
+```{r}
+covid_pivot_data <- function(input_data, value_var_name){
+  input_data %>% 
+    pivot_longer(cols = -one_of('country','subregion','lat','long'),
+                 names_to = 'date',
+                 values_to = value_var_name) ->
+    output_data
+  return(output_data)
+}
+```
+
+### Convert dates
+
+```{r}
+covid_convert_dates <- function(input_data){
+  input_data %>% 
+    dplyr::mutate(date = mdy(date)) ->
+    output_data
+  return(output_data)
+}
+```
+
+### Rearrange data
+
+```{r}
+covid_rearrange_data <- function(input_data){
+  input_data %>% 
+    dplyr::select(country, subregion, date, lat, long, everything()) %>% 
+    dplyr::arrange(country, subregion, date) ->
+    output_data
+  return(output_data)
+}
+```
+
+### Get and wrangle data
+
+```{r}
+covid_get_data <- function(input_url, value_var_name){
+  covid_data_inprocess <- read_csv(input_url)
+  covid_data_inprocess <- covid_rename_columns(covid_data_inprocess)
+  covid_data_inprocess <- covid_pivot_data(covid_data_inprocess, value_var_name)
+  covid_data_inprocess <- covid_convert_dates(covid_data_inprocess)
+  covid_data_inprocess <- covid_rearrange_data(covid_data_inprocess)
+  return(covid_data_inprocess)
+}
+```
+
+### Get data
+
+```{r}
+url_confirmed = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv'
+url_deaths = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
+url_recovered = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv'
+```
+
+
+```{r}
+covid_confirmed <- covid_get_data(url_confirmed, 'confirmed')
+covid_deaths <- covid_get_data(url_deaths, 'dead')
+covid_recovered <- covid_get_data(url_recovered, 'recovered')
+```
+
+### Merge data
+
+Next the three files (`covid_confirmed`, `covid_deaths`, `covid_recovered`) will be merged and duplicate columns will be dropped.
+
+```{r}
+covid_confirmed %>% 
+  left_join(covid_deaths, on = c(country, subregion, date)) %>% 
+  left_join(covid_recovered, on = c(country, subregion, date)) ->
+  covid_data
+```
+
+### Add new cases and daily deaths
+
+```{r}
+covid_data %>% 
+  arrange(country, subregion, date) %>% 
+  group_by(country, subregion) %>% 
+  mutate(new_cases = confirmed - lag(confirmed),
+         daily_dead = dead - lag(dead)) %>% 
+  ungroup() ->
+  covid_data
+```
+
+## Visual data exploration
+
+### Scatter plot
+
+**Note:** To arrive at the total `confirmed` or `dead` for a given date, one will need to sum over all the values at the given date.  This is the case for example with the United Kingdom since it has eleven subregions.
+
+```{r, fig.width = 10}
+covid_data %>% 
+  filter(date == (today - 1)) %>% 
+  select(country, confirmed, dead, recovered) %>% 
+  group_by(country) %>% 
+  summarise(dead = sum(dead), 
+            confirmed = sum(confirmed)) %>% 
+  ggplot(aes(x = confirmed, y = dead)) +
+    geom_point(alpha = 0.4, aes(color = country)) +
+    geom_smooth(se = FALSE, size = 0.5, color = "pink") +
+    guides(color = FALSE) +
+    theme_bw() -> p1
+library(plotly)
+p2 <- ggplotly(p1)
+p2
+```
+
+### Barplot
+
+What follows is ugly!
+
+```{r}
+covid_data %>% 
+  filter(date == (today - 1)) %>% 
+  select(country, confirmed) %>% 
+  group_by(country) %>% 
+  summarise(confirmed = sum(confirmed)) %>% 
+  arrange(desc(confirmed)) %>% 
+  top_n(10) %>% 
+  ggplot(aes(x = country, y = confirmed)) +
+    geom_bar(stat = 'identity', fill = 'black') 
+```
+
+
+Fixing up and switching axes...
+
+```{r}
+covid_data %>% 
+  filter(date == (today - 1)) %>% 
+  select(country, confirmed) %>% 
+  group_by(country) %>% 
+  summarise(confirmed = sum(confirmed)) %>% 
+  arrange(desc(confirmed)) %>% 
+  top_n(10) %>% 
+  ggplot(aes(y = fct_reorder(country, confirmed), x = confirmed)) +
+    geom_bar(stat = 'identity', fill = 'gray', color = "black") +       
+    labs(y = "") +
+    theme_bw()
+```
+
+### Line Charts
+
+Line chart of covid-19 cases versus time excluding China.
+
+
+```{r}
+covid_data %>% 
+  filter(country != 'China') %>% 
+  group_by(date) %>% 
+  summarise(confirmed = sum(confirmed)) %>% 
+  ggplot(aes(x = date, y = confirmed)) +
+    geom_line(color = 'red') +
+    theme_bw()
+```
+
+```{r, label = "deaths", fig.cap = "World wide reported COVID-19 deaths by date"}
+covid_data %>% 
+  group_by(date) %>% 
+  summarise(dead = sum(dead)) %>% 
+  ggplot(aes(x = date, y = dead)) +
+    geom_line(color = 'red') +
+    theme_bw()
+```
+
+
+
+
+
+```{r}
+covid_data %>% 
+  filter(country %in%  c('US', 'Spain', 'Russia', "United Kingdom", "Italy", "Brazil")) %>% 
+  group_by(country, date) %>% 
+  summarise(confirmed = sum(confirmed)) %>% 
+  ggplot(aes(x = date, y = confirmed)) +
+    geom_line(color = 'red') +
+    facet_wrap(~country) +
+    theme_bw() + 
+    labs(title = "Total confirmed cases by date")
+```
+
+```{r}
+covid_data %>% 
+  filter(country %in%  c('US', 'Spain', 'Russia', "United Kingdom", "Italy", "Brazil")) %>% 
+  group_by(country, date) %>% 
+  summarise(confirmed = sum(confirmed)) %>% 
+  ggplot(aes(x = date, y = confirmed)) +
+    geom_line(color = 'red') +
+    facet_wrap(~country, scales = 'free') +
+    theme_bw() + 
+    labs(title = "Total confirmed cases by date")
+```
+
+
+
+
+```{r}
+covid_data %>% 
+  filter(country %in%  c('US', 'Spain', 'Russia', "United Kingdom", "Italy", "Brazil")) %>% 
+  group_by(country, date) %>% 
+  summarise(total_dead = sum(dead)) %>% 
+  ggplot(aes(x = date, y = total_dead)) +
+    geom_line(color = 'red') +
+    facet_wrap(~country) +
+    theme_bw() + 
+    labs(title = "Total deaths by date")
+```
+
+```{r}
+covid_data %>% 
+  filter(country %in%  c('US', 'Spain', 'Russia', "United Kingdom", "Italy", "Brazil")) %>% 
+  group_by(country, date) %>% 
+  summarise(total_dead = sum(dead)) %>% 
+  ggplot(aes(x = date, y = total_dead)) +
+    geom_line(color = 'red') +
+    facet_wrap(~country, scales = "free") +
+    theme_bw() + 
+    labs(title = "Total deaths by date")
+```
+
+
+
+```{r}
+covid_data %>% 
+  filter(country %in%  c('US', 'Spain', 'Russia', "United Kingdom", "Italy", "Brazil")) %>% 
+  group_by(country, date) %>% 
+  summarise(confirmed = sum(confirmed)) %>% 
+  ggplot(aes(x = date, y = confirmed, color = country)) +
+    geom_line() + 
+  scale_color_manual(values = c("pink", "orange", "gray", "red", "lightblue", "purple")) +
+    theme_bw() + 
+    labs(title = "Total confirmed cases by date")
+```
+
+## Computing and graphing a five day rolling mean 
+
+```{r}
+covid_data %>% 
+  filter(country %in% c('US', 'Spain', 'Russia', "United Kingdom", "Italy", "Brazil")) %>%
+  group_by(country, date) %>% 
+  summarise(new_cases = sum(new_cases), daily_dead = sum(daily_dead)) %>% 
+  mutate(new_case_rollmean_5 = rollmean(new_cases, k = 5, fill = NA, align = "right"), 
+         daily_dead_rollmean = rollmean(daily_dead, k = 5, fill = NA, align = "right")) %>% 
+  select(country, date, new_cases, new_case_rollmean_5, daily_dead_rollmean) %>% 
+  ggplot(aes(x = date, y = new_case_rollmean_5)) +
+    geom_line(aes(color = country)) +
+    labs(title = 'Covid19 New Cases\n5 day rolling avg') + 
+    facet_wrap(~country) + 
+    guides(color = FALSE) + 
+    theme_bw()
+```
+
+
+```{r}
+covid_data %>% 
+  filter(country %in% c('US', 'Spain', 'Russia', "United Kingdom", "Italy", "Brazil")) %>%
+  group_by(country, date) %>% 
+  summarise(new_cases = sum(new_cases), daily_dead = sum(daily_dead)) %>% 
+  mutate(new_case_rollmean_5 = rollmean(new_cases, k = 5, fill = NA, align = "right"), 
+         daily_dead_rollmean = rollmean(daily_dead, k = 5, fill = NA, align = "right")) %>% 
+  select(country, date, new_cases, new_case_rollmean_5, daily_dead_rollmean) %>% 
+  ggplot(aes(x = date, y = new_case_rollmean_5)) +
+    geom_line(aes(color = country)) +
+    labs(title = 'Covid19 New Cases\n5 day rolling avg') + 
+    facet_wrap(~country, scales = "free") + 
+    guides(color = FALSE) + 
+    theme_bw()
+```
+
+
+```{r}
+covid_data %>% 
+  filter(country %in% c('US', 'Spain', 'Russia', "United Kingdom", "Italy", "Brazil")) %>%
+  group_by(country, date) %>% 
+  summarise(new_cases = sum(new_cases), daily_dead = sum(daily_dead)) %>% 
+  mutate(new_case_rollmean_10 = rollmean(new_cases, k = 10, na.pad = TRUE, align = "right"), 
+         daily_dead_rollmean = rollmean(daily_dead, k = 10, na.pad = TRUE, align = "right")) %>% 
+  select(country, date, new_cases, new_case_rollmean_10, daily_dead_rollmean) %>% 
+  ggplot(aes(x = date, y = daily_dead_rollmean)) +
+    geom_line(aes(color = country)) +
+    labs(title = 'Covid19 Daily Dead\n10 day rolling avg') + 
+    facet_wrap(~country) + 
+    guides(color = FALSE) + 
+    theme_bw()
+```
+
+```{r}
+covid_data %>% 
+  filter(country %in% c('US', 'Spain', 'Russia', "United Kingdom", "Italy", "Brazil")) %>%
+  group_by(country, date) %>% 
+  summarise(new_cases = sum(new_cases), daily_dead = sum(daily_dead)) %>% 
+  mutate(new_case_rollmean_10 = rollmean(new_cases, k = 10, na.pad = TRUE, align = "right"), 
+         daily_dead_rollmean = rollmean(daily_dead, k = 10, na.pad = TRUE, align = "right")) %>% 
+  select(country, date, new_cases, new_case_rollmean_10, daily_dead_rollmean) %>% 
+  ggplot(aes(x = date, y = daily_dead_rollmean)) +
+    geom_line(aes(color = country)) +
+    labs(title = 'Covid19 Daily Dead\n10 day rolling avg') + 
+    facet_wrap(~country, scales = "free") + 
+    guides(color = FALSE) + 
+    theme_bw()
+```
+
+
+## Getting World Population data
+
+[https://datahub.io/core/population#r](https://datahub.io/core/population#r)
+
+```{r}
+library(jsonlite)
+json_file <- 'https://datahub.io/core/population/datapackage.json'
+json_data <- fromJSON(paste(readLines(json_file), collapse=""))
+
+# get list of all resources:
+print(json_data$resources$name)
+
+# print all tabular data(if exists any)
+for(i in 1:length(json_data$resources$datahub$type)){
+  if(json_data$resources$datahub$type[i]=='derived/csv'){
+    path_to_file = json_data$resources$path[i]
+    data <- read.csv(url(path_to_file))
+    # print(data)
+  }
+}
+pop_data <- data %>% 
+  filter(Year == max(data$Year))  # Get most current year population
+pop_data_rename <- pop_data %>% 
+  dplyr::rename('country' = 'Country.Name', 'population' = 'Value') %>% 
+  mutate(country = replace(as.vector(country), country == "United States", "US")) %>% 
+  mutate(country = replace(as.vector(country), country == "Russian Federation", "Russia")) %>%
+  select(country, population)
+head(pop_data_rename)
+###
+covid_data_pop <- covid_data %>% 
+    left_join(pop_data_rename, on = c(country)) 
+head(covid_data_pop)
+```
+
+### Density
+
+```{r}
+covid_data_pop %>% 
+  filter(country %in%  c('US', 'Spain', 'Russia', "United Kingdom", "Italy", "Brazil")) %>% 
+  group_by(country, date) %>% 
+  mutate(cd = (confirmed/population)) %>% 
+  summarise(cd = sum(cd)) %>%
+  ggplot(aes(x = date, y = cd)) +
+    geom_line(color = 'red') +
+    facet_wrap(~country) +
+    theme_bw() + 
+    labs(title = "Total confirmed cases by date")
+```
+
+```{r}
+covid_data_pop %>% 
+  filter(country %in%  c('US', 'Spain', 'Russia', "United Kingdom", "Italy", "Brazil")) %>% 
+  group_by(country, date) %>% 
+  mutate(dd = (dead/population)) %>% 
+  summarise(dd = sum(dd)) %>%
+  ggplot(aes(x = date, y = dd)) +
+    geom_line(color = 'red') +
+    facet_wrap(~country) +
+    theme_bw() + 
+    labs(title = "Total dead cases by date")
+```
+
+# Exercises
+
+1.  Make the y-axis of Figure \@ref(fig:deaths) log base 10.  See `scale_y_log10()`.  Match the colors for points and lines used in the logarithmic graph of total deaths in the bottom right of the [Johns Hopkins covid panel](https://coronavirus.jhu.edu/map.html) (Logarithmic tab).
+
+2. Create a bar chart of the COVID 19 daily cases similar to the one reported in the bottom right of the [Johns Hopkins covid panel](https://coronavirus.jhu.edu/map.html) (Daily Cases tab).  Discuss why some of the daily reported new cases are negative.
+
+3. Change the style file in the `csl` metadata field of the YAML to your favorite journal.  Note you will have to download possibly from [https://www.zotero.org/styles](https://www.zotero.org/styles) and upload the appropriate `csl` file.
+
+4. Add figure captions for the barplots and line charts that do not have them.  
+
+_________________________________
+
+
+```{r, label = "deathsLOG", fig.cap = "World wide reported COVID-19 deaths (logarithmic base 10 scale) by date"}
+# Exercise 1.
+covid_data %>% 
+  group_by(date) %>% 
+  summarise(dead = sum(dead)) %>% 
+  ggplot(aes(x = date, y = dead)) +
+    geom_line(color = 'orange') +
+    geom_point(color = "orange", size = 1) +  
+    theme_bw() + 
+    scale_y_log10()
+```
+
+```{r}
+# Exercise 2.
+covid_data %>% 
+  ggplot(aes(x = date, y = new_cases)) +
+    geom_bar(stat="identity", fill = "orange") + 
+    labs(y = "New Cases") +
+    theme_bw()
+```
+
+__________________________________
+
+## References
+
