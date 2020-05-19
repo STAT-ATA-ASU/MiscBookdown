@@ -19,7 +19,7 @@ library(zoo)  # for rollmean
 
 # **R** Code and labels
 
-There are two types of **R** code in R Markdown documents: **R** code chunks, and inline **R** code. The syntax for inline **R** code is `` ``r ''`r R_CODE` ``, and it can be embedded inline with other document elements. **R** code chunks look like plain code blocks, but have `{r}` after the three backticks and (optionally) chunk options inside `{}`, e.g.,
+There are two types of **R** code in R Markdown documents: **R** code chunks and inline **R** code. The syntax for inline **R** code is `` ``r ''`r R_CODE` ``, and it can be embedded inline with other document elements. **R** code chunks look like plain code blocks but have `{r}` after the three backticks and (optionally) chunk options inside `{}`, e.g.,
 
 ````markdown
 `r ''````{r, eval = FALSE}
@@ -30,7 +30,7 @@ rn <- rnorm(1000, 100, 15)
 ````
 
 
-When the previous code is evaluated, random numbers are generated from a $\mathcal{N}(\mu = 100, \sigma = 15)$ distribution.  In line codes `` ``r ''`r round(mean(rn),2)` `` and `` ``r ''`r round(sd(rn),2)` `` are used to compute and round the mean and standardard deviation of `rn` to two decimal places, respectively.
+When the previous code is evaluated, random numbers are generated from a $\mathcal{N}(\mu = 100, \sigma = 15)$ distribution.  
 
 ```{r}
 rn <- rnorm(1000, 100, 15)
@@ -38,9 +38,9 @@ rn <- rnorm(1000, 100, 15)
 (sd(rn))
 ```
 
-The mean of `rn` rounded to two decimal places is `r round(mean(rn),2)`, while the standard deviation of `rn` rounded to two decimal places is `r round(sd(rn),2)`.
+The mean of `rn` rounded to two decimal places is `r round(mean(rn),2)`, while the standard deviation of `rn` rounded to two decimal places is `r round(sd(rn),2)`.  In line codes `` ``r ''`r round(mean(rn),2)` `` and `` ``r ''`r round(sd(rn),2)` `` are used to compute and round the mean and standardard deviation of `rn` to two decimal places, respectively.
 
-If you have used $\LaTeX{}$, inserting beautiful mathematics in your documents should not be an issue.  There are a couple of differences when labeling an equation that are needed in **bookdown** [@R-bookdown] so that one of the several types of documents that are possible to create from R Markdown work properly. To number an equation, enclose the equation in an equation environment and assign a label to the equation using the syntax `(\#eq:label)`. Equation labels must start with the prefix `eq:` in bookdown. To refer to the equation, use the syntax `\@ref(eq:label)`.  For example: 
+If you have used $\LaTeX{}$, inserting beautiful mathematics in your documents should not be an issue.  There are some differences when labeling an equation that are needed in **bookdown** [@R-bookdown] so that documents written in R Markdown render properly. To number an equation, enclose the equation in an equation environment and assign a label to the equation using the syntax `(\#eq:label)`. Equation labels must start with the prefix `eq:` in bookdown. To refer to the equation, use the syntax `\@ref(eq:label)`.  For example: 
 
 ```{r, eval = FALSE}
 \begin{equation}
@@ -73,7 +73,7 @@ A slighlty more complex example showing the intermediate numbers used to compute
 
 ## Graph with a caption
 
-The following code was used to create Figure \@ref(fig:histo).  When creating Figures make sure to use a `label` inside your R code chunk.  To refer to the Figure use the syntax `\@ref(fig:label)`.
+The following code was used to create Figure \@ref(fig:histo). 
 
 ````markdown
 `r ''````{r, label = "histo", fig.cap = "Histogram of 1000 randomly generated values from a N(100, 15) distribution", echo = FALSE}
@@ -85,10 +85,11 @@ hist(rn, main = "", xlab = "", col = "pink")
 hist(rn, main = "", xlab = "", col = "pink")
 ```
 
+When creating Figures, make sure to use a `label` inside your R code chunk.  To refer to the Figure use the syntax `\@ref(fig:label)`.
 
 ## Tables
 
-Table \@ref(tab:FT) was created using the **R** code chunk and code below.  Note that to refer to Table \@ref(tab:FT), the name of the code chunk label is used.  In this case, the code chunk label is `FT` and to refer to Table \@ref(tab:FT) one uses the syntax `\@ref(tab:FT)`.
+Table \@ref(tab:FT) was created using the **R** code chunk and code below.  Note that to refer to Table \@ref(tab:FT), the name of the code chunk label is used.  In this case, the code chunk label is `FT`; and to refer to Table \@ref(tab:FT), one uses the syntax `\@ref(tab:FT)`.
 
 ````markdown
 `r ''````{r, label = "FT", echo = FALSE}
@@ -154,15 +155,43 @@ The first three entries of the `packages.bib` file are shown below.
 }
 ```
 
-Citations go inside square brackets and are separated by semicolons. Each citation must have a key, composed of `@` + the citation identifier from the database, and may optionally have a prefix, a locator, and a suffix.  See [here](https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html) for examples.  This document of course relies on **R**  [@R-base] as well as many other packages. The citation [@R-base] was created with `[@R-base]`.
+Citations go inside square brackets and are separated by semicolons. Each citation must have a key, composed of `@` + the citation identifier from the database and may optionally have a prefix, a locator, and a suffix.  See [here](https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html) for examples.  This document  relies on **R**  [@R-base] as well as many other packages. The citation [@R-base] was created with `[@R-base]`.
+
+The first entry of the `Alayna.bib` file is shown below.
+
+```{r, eval = FALSE}
+@article{goldberg_structure_1993,
+	title = {The structure of phenotypic personality traits},
+	issn = {0003-066X},
+	url = {https://login.proxy006.nclive.org/login?url=http://search.ebscohost.com/login.aspx?direct=true&db=edsbig&AN=edsbig.A13605369&site=eds-live&scope=site},
+	abstract = {This personal historical article traces the development of the Big-Five factor structure, whose growing acceptance by personality researchers has profoundly influenced the scientific study of individual differences. The roots of this taxonomy lie in the lexical hypothesis and the insights of Sir Francis Galton, the prescience of L. L. Thurstone, the legacy of Raymond B. Cattell, and the seminal analyses of Tupes and Christal. Paradoxically, the present popularity of this model owes much to its many critics, each of whom tried to replace it, but failed. In reaction, there have been a number of attempts to assimilate other models into the five-factor structure. Lately, some practical implications of the emerging consensus can be seen in such contexts as personnel selection and classification.},
+	number = {n1},
+	urldate = {2020-05-10},
+	journal = {The American Psychologist},
+	author = {Goldberg, Lewis R.},
+	year = {1993},
+	note = {Publisher: American Psychological Association, Inc.},
+	keywords = {Personality -- Research, Personality assessment -- Models, Phenotype -- Research},
+	file = {EBSCO Full Text:/Users/alan/Zotero/storage/IWRNVJUA/Goldberg - 1993 - The structure of phenotypic personality traits.pdf:application/pdf}
+}
+```
+
+### Using the zotero `*.bib` file{-}
 
 
-The structure of phenotypic personality traits is addressed in @goldberg_structure_1993 while @ridderinkhof_role_2004 discusses the role of the medial frontal cortex in cognitive control.  I really have no idea what @hooker_influence_2008 says about fear and reward learning but @nowakowska_temperamental_2005 does shed some light on temperamental commonalities for moody patients.  The citations @goldberg_structure_1993, @ridderinkhof_role_2004, @hooker_influence_2008, and @nowakowska_temperamental_2005 were created with `@goldberg_structure_1993`, `@ridderinkhof_role_2004`, `@hooker_influence_2008`, and `@nowakowska_temperamental_2005`.
+The next paragraph illustrates different citations using the `*.bib` file `Alayna.bib`.
+
+The structure of phenotypic personality traits is addressed in @goldberg_structure_1993. The role of the medial frontal cortex in cognitive control and its ramifications are great [see @goldberg_structure_1993, pp. 3-4; @ridderinkhof_role_2004, pp. 3-5; @hooker_influence_2008, ch.2]. @goldberg_structure_1993 [p. 4] says the phenotypic personality trait is out of this world.
 
 
-## The YAML{-}
+The citations @goldberg_structure_1993, [see @goldberg_structure_1993, pp. 3-4; @ridderinkhof_role_2004, pp. 3-5; @hooker_influence_2008, ch.2], and  @goldberg_structure_1993 [p. 4] were created with `@goldberg_structure_1993`, `[see @goldberg_structure_1993, pp. 3-4; @ridderinkhof_role_2004, pp. 3-5; @hooker_influence_2008, ch.2]`, and `@goldberg_structure_1993 [p. 4]`.
 
-Citations will only work if your `*.bib` files are included in the YAML.  Note in the example below that there are two `*.bib` files.  By default, pandoc will use a Chicago author-date format for citations and references. To use another style, you will need to specify a CSL 1.0 style file in the `csl` metadata field. In the example below, the `apa.csl` is used.  CSL files may be downloaded from [https://www.zotero.org/styles](https://www.zotero.org/styles).  Make sure to store the CSL file in your working directory or specify the path to the CSL file in the metadata field of your YAML.   
+
+### The YAML{-}
+
+Citations will only work if your `*.bib` files are included in the YAML.  Note in the example below that there are two `*.bib` files.  By default, pandoc will use a Chicago author-date format for citations and references. To use another style, you will need to specify a CSL 1.0 style file in the `csl` metadata field. In the example below, the `apa.csl` is used.  CSL files may be downloaded from [https://www.zotero.org/styles](https://www.zotero.org/styles).  Make sure to store the CSL file in your _working directory_ or specify the path to the CSL file in the metadata field of your YAML.  
+
+* Discuss how to specify a path! 
 
 ```{r, eval = FALSE}
 ---
@@ -181,7 +210,7 @@ csl: apa.csl
 
 # A **ggplot2/plotly** graph
 
-Figure \@ref(fig:gp1) is a plotly graph that was converted from a ggplot2 graph.  Make sure to give credit package authors when using packages.  In this section, we use **ggplot2** [@R-ggplot2] and **plotly** [@R-plotly] to create Figure \@ref(fig:gp1).  
+Figure \@ref(fig:gp1) is a plotly graph that was converted from a ggplot2 graph.  Make sure to credit package authors when using packages.  In this section, we use **ggplot2** [@R-ggplot2] and **plotly** [@R-plotly] to create Figure \@ref(fig:gp1).  
 
 ```{r, label = "gp1", fig.cap = "The standard **ggplot2** scatter plot"}
 p1 <- ggplot(data = mtcars, aes(x = disp, y = mpg)) + 
@@ -264,7 +293,7 @@ knitr::include_url("https://coronavirus.jhu.edu/map.html", height = "600px")
 
 ## Grabbing all of the important data
 
-We need to get two additional streams of data the "deaths" and "recovered" cases and wrangle those data sets into tidy tibbles.  To do this we will write functions that follow the basic structure for tidying the "confirmed" cases.  There will be a suite a functions to rename columns, "gather" data, convert dates, rearrange columns, read csv files, and merge data.
+We need to get two additional streams of data, the "deaths" and "recovered" cases, and wrangle those data sets into tidy tibbles.  To do this we will write functions that follow the basic structure for tidying the "confirmed" cases.  There will be a suite a functions to rename columns, to "gather" data, to convert dates, to rearrange columns, to read csv files, and to merge data.
 
 ### Rename columns
 
@@ -371,7 +400,7 @@ covid_data %>%
 
 ### Scatter plot
 
-**Note:** To arrive at the total `confirmed` or `dead` for a given date, one will need to sum over all the values at the given date.  This is the case for example with the United Kingdom since it has eleven subregions.
+**Note:** To arrive at the total `confirmed` or `dead` for a country on a given date, one will need to sum over all subregions in each country. For example, the United Kingdom will have eleven subregions in its total.
 
 ```{r, fig.width = 10}
 covid_data %>% 
@@ -516,19 +545,19 @@ covid_data %>%
     labs(title = "Total confirmed cases by date")
 ```
 
-## Computing and graphing a five day rolling mean 
+## Computing and graphing a seven day rolling mean 
 
 ```{r}
 covid_data %>% 
   filter(country %in% c('US', 'Spain', 'Russia', "United Kingdom", "Italy", "Brazil")) %>%
   group_by(country, date) %>% 
   summarise(new_cases = sum(new_cases), daily_dead = sum(daily_dead)) %>% 
-  mutate(new_case_rollmean_5 = rollmean(new_cases, k = 5, fill = NA, align = "right"), 
-         daily_dead_rollmean = rollmean(daily_dead, k = 5, fill = NA, align = "right")) %>% 
-  select(country, date, new_cases, new_case_rollmean_5, daily_dead_rollmean) %>% 
-  ggplot(aes(x = date, y = new_case_rollmean_5)) +
+  mutate(new_case_rollmean_7 = rollmean(new_cases, k = 7, fill = NA, align = "right"), 
+         daily_dead_rollmean = rollmean(daily_dead, k = 7, fill = NA, align = "right")) %>% 
+  select(country, date, new_cases, new_case_rollmean_7, daily_dead_rollmean) %>% 
+  ggplot(aes(x = date, y = new_case_rollmean_7)) +
     geom_line(aes(color = country)) +
-    labs(title = 'Covid19 New Cases\n5 day rolling avg') + 
+    labs(title = 'Covid19 New Cases\n7 day rolling avg') + 
     facet_wrap(~country) + 
     guides(color = FALSE) + 
     theme_bw()
@@ -540,12 +569,12 @@ covid_data %>%
   filter(country %in% c('US', 'Spain', 'Russia', "United Kingdom", "Italy", "Brazil")) %>%
   group_by(country, date) %>% 
   summarise(new_cases = sum(new_cases), daily_dead = sum(daily_dead)) %>% 
-  mutate(new_case_rollmean_5 = rollmean(new_cases, k = 5, fill = NA, align = "right"), 
-         daily_dead_rollmean = rollmean(daily_dead, k = 5, fill = NA, align = "right")) %>% 
-  select(country, date, new_cases, new_case_rollmean_5, daily_dead_rollmean) %>% 
-  ggplot(aes(x = date, y = new_case_rollmean_5)) +
+  mutate(new_case_rollmean_7 = rollmean(new_cases, k = 7, fill = NA, align = "right"), 
+         daily_dead_rollmean = rollmean(daily_dead, k = 7, fill = NA, align = "right")) %>% 
+  select(country, date, new_cases, new_case_rollmean_7, daily_dead_rollmean) %>% 
+  ggplot(aes(x = date, y = new_case_rollmean_7)) +
     geom_line(aes(color = country)) +
-    labs(title = 'Covid19 New Cases\n5 day rolling avg') + 
+    labs(title = 'Covid19 New Cases\n7 day rolling avg') + 
     facet_wrap(~country, scales = "free") + 
     guides(color = FALSE) + 
     theme_bw()
@@ -557,12 +586,12 @@ covid_data %>%
   filter(country %in% c('US', 'Spain', 'Russia', "United Kingdom", "Italy", "Brazil")) %>%
   group_by(country, date) %>% 
   summarise(new_cases = sum(new_cases), daily_dead = sum(daily_dead)) %>% 
-  mutate(new_case_rollmean_10 = rollmean(new_cases, k = 10, na.pad = TRUE, align = "right"), 
-         daily_dead_rollmean = rollmean(daily_dead, k = 10, na.pad = TRUE, align = "right")) %>% 
-  select(country, date, new_cases, new_case_rollmean_10, daily_dead_rollmean) %>% 
+  mutate(new_case_rollmean_7 = rollmean(new_cases, k = 7, na.pad = TRUE, align = "right"), 
+         daily_dead_rollmean = rollmean(daily_dead, k = 7, na.pad = TRUE, align = "right")) %>% 
+  select(country, date, new_cases, new_case_rollmean_7, daily_dead_rollmean) %>% 
   ggplot(aes(x = date, y = daily_dead_rollmean)) +
     geom_line(aes(color = country)) +
-    labs(title = 'Covid19 Daily Dead\n10 day rolling avg') + 
+    labs(title = 'Covid19 Daily Dead\n7 day rolling avg') + 
     facet_wrap(~country) + 
     guides(color = FALSE) + 
     theme_bw()
@@ -573,12 +602,12 @@ covid_data %>%
   filter(country %in% c('US', 'Spain', 'Russia', "United Kingdom", "Italy", "Brazil")) %>%
   group_by(country, date) %>% 
   summarise(new_cases = sum(new_cases), daily_dead = sum(daily_dead)) %>% 
-  mutate(new_case_rollmean_10 = rollmean(new_cases, k = 10, na.pad = TRUE, align = "right"), 
-         daily_dead_rollmean = rollmean(daily_dead, k = 10, na.pad = TRUE, align = "right")) %>% 
-  select(country, date, new_cases, new_case_rollmean_10, daily_dead_rollmean) %>% 
+  mutate(new_case_rollmean_7 = rollmean(new_cases, k = 7, na.pad = TRUE, align = "right"), 
+         daily_dead_rollmean = rollmean(daily_dead, k = 7, na.pad = TRUE, align = "right")) %>% 
+  select(country, date, new_cases, new_case_rollmean_7, daily_dead_rollmean) %>% 
   ggplot(aes(x = date, y = daily_dead_rollmean)) +
     geom_line(aes(color = country)) +
-    labs(title = 'Covid19 Daily Dead\n10 day rolling avg') + 
+    labs(title = 'Covid19 Daily Dead\n7 day rolling avg') + 
     facet_wrap(~country, scales = "free") + 
     guides(color = FALSE) + 
     theme_bw()
@@ -631,7 +660,7 @@ covid_data_pop %>%
     geom_line(color = 'red') +
     facet_wrap(~country) +
     theme_bw() + 
-    labs(title = "Total confirmed cases by date")
+    labs(title = "Total confirmed cases/population (density) by date")
 ```
 
 ```{r}
@@ -644,14 +673,14 @@ covid_data_pop %>%
     geom_line(color = 'red') +
     facet_wrap(~country) +
     theme_bw() + 
-    labs(title = "Total dead cases by date")
+    labs(title = "Total dead/population (death density) cases by date")
 ```
 
 # Exercises
 
 1.  Make the y-axis of Figure \@ref(fig:deaths) log base 10.  See `scale_y_log10()`.  Match the colors for points and lines used in the logarithmic graph of total deaths in the bottom right of the [Johns Hopkins covid panel](https://coronavirus.jhu.edu/map.html) (Logarithmic tab).
 
-2. Create a bar chart of the COVID 19 daily cases similar to the one reported in the bottom right of the [Johns Hopkins covid panel](https://coronavirus.jhu.edu/map.html) (Daily Cases tab).  Discuss why some of the daily reported new cases are negative.
+2. Create a bar chart of the COVID 19 daily cases similar to the one reported in the bottom right of the [Johns Hopkins covid panel](https://coronavirus.jhu.edu/map.html) (Daily Cases tab).  Discuss why some of the daily reported new cases are negative.  Hint: [counting methods](https://www.catalannews.com/society-science/item/change-in-covid-19-counting-method-sees-surge-in-case-and-death-data), also consider [this one](https://www.elconfidencial.com/espana/2020-04-25/coronavirus-calidad-datos-cambios-metodologia_2565563/)
 
 3. Change the style file in the `csl` metadata field of the YAML to your favorite journal.  Note you will have to download possibly from [https://www.zotero.org/styles](https://www.zotero.org/styles) and upload the appropriate `csl` file.
 
