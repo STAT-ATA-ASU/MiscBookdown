@@ -1,6 +1,9 @@
 ---
 title: "Partial Solution"
 output: bookdown::html_document2
+csl: acta-astronautica.csl 
+bibliography: Alayna.bib
+link-citations: true
 ---
 
 
@@ -14,18 +17,21 @@ library(zoo)  # for rollmean
 ```
 
 
-
+**Exercise 1.**
 
 ```{r}
+# Exercise 1.
 # read in data
 covid_data_pop <- read_csv("./data/covid_data_pop.csv")
 covid_data <- read_csv("./data/covid_data.csv")
 ```
 
+_____________
 
+**Exercise 2.**
 
 ```{r, label = "deathsLOG", fig.cap = "World wide reported COVID-19 deaths (logarithmic base 10 scale) by date"}
-# Exercise 1.
+# Exercise 2.
 covid_data %>% 
   group_by(date) %>% 
   summarise(dead = sum(dead)) %>% 
@@ -36,8 +42,12 @@ covid_data %>%
     scale_y_log10()
 ```
 
+__________
+
+**Exercise 3.**
+
 ```{r}
-# Exercise 2.
+# Exercise 3.
 covid_data %>% 
   ggplot(aes(x = date, y = new_cases)) +
     geom_bar(stat="identity", fill = "orange") + 
@@ -47,7 +57,8 @@ covid_data %>%
 
 Note that some of the `New Cases` are negative!  We will fix that next.
 
-```{r}
+```{r, label = "noneg", fig.cap = "New Cases by date"}
+# Exercise 3.  Final Solution
 covid_data %>% 
   mutate(new_cases = ifelse(new_cases < 0, 0, new_cases)) %>% 
   ggplot(aes(x = date, y = new_cases)) +
@@ -56,5 +67,13 @@ covid_data %>%
     theme_bw()
 ```
 
+____________
 
+**Exercise 4.**
+
+Here we practice citing the work of [@lahey_public_2009] and discuss how [@gehring_prefrontal-cingulate_2000; @savitz_personality_2006] wax eloquently.
+
+______________
+
+## References
 

@@ -110,7 +110,7 @@ One way to create a `*.bib` file is to use [zotero](https://www.zotero.org/).  I
 ````markdown
 `r ''````{r, echo = FALSE, results = "hide"}
 # Create vector of packages you use
-PackagesUsed <- c("ggplot2", "bookdown", "knitr", "base", "dplyr", "zoo", "plotly", "lubridate")
+PackagesUsed <- c("ggplot2", "bookdown", "knitr", "base", "dplyr", "zoo", "plotly", "lubridate", "tidyverse", "readr")
 # Write bib information---NOTE: packages.bib is stored in the working directory
 knitr::write_bib(PackagesUsed, file = "./packages.bib")
 # Load packages
@@ -121,7 +121,7 @@ lapply(PackagesUsed, library, character.only = TRUE)
 
 ```{r, echo = FALSE, results = "hide"}
 # Create vector of packages you use
-PackagesUsed <- c("ggplot2", "bookdown", "knitr", "base", "dplyr", "zoo", "plotly", "lubridate")
+PackagesUsed <- c("ggplot2", "bookdown", "knitr", "base", "dplyr", "zoo", "plotly", "lubridate", "tidyverse", "readr")
 # Write bib information---NOTE: packages.bib is stored in the working directory
 knitr::write_bib(PackagesUsed, file = "./packages.bib")
 # Load packages
@@ -690,13 +690,15 @@ __________________________________________________________________
 
 # Exercises
 
-1.  Make the y-axis of Figure \@ref(fig:deaths) log base 10.  See `scale_y_log10()`.  Match the colors for points and lines used in the logarithmic graph of total deaths in the bottom right of the [Johns Hopkins covid panel](https://coronavirus.jhu.edu/map.html) (Logarithmic tab).
+1. Create a new R Markdown document and read in the `covid_data` stored in the `data` directory using the `read_csv()` function from the **readr** package [@R-readr].
 
-2. Create a bar chart of the COVID 19 daily cases similar to the one reported in the bottom right of the [Johns Hopkins covid panel](https://coronavirus.jhu.edu/map.html) (Daily Cases tab).  Discuss why some of the daily reported new cases are negative.  Hint: [counting methods](https://www.catalannews.com/society-science/item/change-in-covid-19-counting-method-sees-surge-in-case-and-death-data), also consider [this one](https://www.elconfidencial.com/espana/2020-04-25/coronavirus-calidad-datos-cambios-metodologia_2565563/)
+2.  Make the y-axis of Figure \@ref(fig:deaths) log base 10.  See `scale_y_log10()`.  Match the colors for points and lines used in the logarithmic graph of total deaths in the bottom right of the [Johns Hopkins covid panel](https://coronavirus.jhu.edu/map.html) (Logarithmic tab).
 
-3. Change the style file in the `csl` metadata field of the YAML to your favorite journal.  Note you will have to download possibly from [https://www.zotero.org/styles](https://www.zotero.org/styles) and upload the appropriate `csl` file.
+3. Create a bar chart of the COVID 19 daily cases similar to the one reported in the bottom right of the [Johns Hopkins covid panel](https://coronavirus.jhu.edu/map.html) (Daily Cases tab).  Discuss why some of the daily reported new cases are negative.  Hint: [counting methods](https://www.catalannews.com/society-science/item/change-in-covid-19-counting-method-sees-surge-in-case-and-death-data), also consider [this one](https://www.elconfidencial.com/espana/2020-04-25/coronavirus-calidad-datos-cambios-metodologia_2565563/)
 
-4. Add figure captions for the barplots and line charts that do not have them.  
+4. Change the style file in the `csl` metadata field of the YAML to your favorite journal.  Note you will have to download possibly from [https://www.zotero.org/styles](https://www.zotero.org/styles) and upload the appropriate `csl` file.  Use zotero to find three articles in your field of study.  Export from zotero `*.bib` file (name the file `articulos.bib`) of the three articles.  Practive citing the articles in your R Markdown document.
+
+5. Add figure captions for the line chart in exercise 2 and the barchart in exercise 3.
 
 _________________________________
 
