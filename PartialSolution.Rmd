@@ -1,0 +1,60 @@
+---
+title: "Partial Solution"
+output: bookdown::html_document2
+---
+
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA, message = FALSE, warning = FALSE)
+library(plotly)
+library(tidyverse)
+library(lubridate)
+library(zoo)  # for rollmean
+```
+
+
+
+
+```{r}
+# read in data
+covid_data_pop <- read_csv("./data/covid_data_pop.csv")
+covid_data <- read_csv("./data/covid_data.csv")
+```
+
+
+
+```{r, label = "deathsLOG", fig.cap = "World wide reported COVID-19 deaths (logarithmic base 10 scale) by date"}
+# Exercise 1.
+covid_data %>% 
+  group_by(date) %>% 
+  summarise(dead = sum(dead)) %>% 
+  ggplot(aes(x = date, y = dead)) +
+    geom_line(color = 'orange') +
+    geom_point(color = "orange", size = 1) +  
+    theme_bw() + 
+    scale_y_log10()
+```
+
+```{r}
+# Exercise 2.
+covid_data %>% 
+  ggplot(aes(x = date, y = new_cases)) +
+    geom_bar(stat="identity", fill = "orange") + 
+    labs(y = "New Cases") +
+    theme_bw()
+```
+
+Note that some of the `New Cases` are negative!  We will fix that next.
+
+```{r}
+covid_data %>% 
+  mutate(new_cases = ifelse(new_cases < 0, 0, new_cases)) %>% 
+  ggplot(aes(x = date, y = new_cases)) +
+    geom_bar(stat="identity", fill = "orange") + 
+    labs(y = "New Cases") +
+    theme_bw()
+```
+
+
+

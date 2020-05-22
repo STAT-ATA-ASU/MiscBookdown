@@ -676,6 +676,18 @@ covid_data_pop %>%
     labs(title = "Total dead/population (death density) cases by date")
 ```
 
+### Exporting Data
+
+```{r}
+if (!dir.exists("data")) dir.create("data")
+write_csv(covid_data, path = "./data/covid_data.csv")
+write_csv(covid_data_pop, path = "./data/covid_data_pop.csv")
+```
+
+
+__________________________________________________________________
+
+
 # Exercises
 
 1.  Make the y-axis of Figure \@ref(fig:deaths) log base 10.  See `scale_y_log10()`.  Match the colors for points and lines used in the logarithmic graph of total deaths in the bottom right of the [Johns Hopkins covid panel](https://coronavirus.jhu.edu/map.html) (Logarithmic tab).
@@ -689,28 +701,6 @@ covid_data_pop %>%
 _________________________________
 
 
-```{r, label = "deathsLOG", fig.cap = "World wide reported COVID-19 deaths (logarithmic base 10 scale) by date"}
-# Exercise 1.
-covid_data %>% 
-  group_by(date) %>% 
-  summarise(dead = sum(dead)) %>% 
-  ggplot(aes(x = date, y = dead)) +
-    geom_line(color = 'orange') +
-    geom_point(color = "orange", size = 1) +  
-    theme_bw() + 
-    scale_y_log10()
-```
-
-```{r}
-# Exercise 2.
-covid_data %>% 
-  ggplot(aes(x = date, y = new_cases)) +
-    geom_bar(stat="identity", fill = "orange") + 
-    labs(y = "New Cases") +
-    theme_bw()
-```
-
-__________________________________
 
 ## References
 
