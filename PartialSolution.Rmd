@@ -1,6 +1,7 @@
 ---
 title: "Partial Solution"
 output: bookdown::html_document2
+date: 'Last compiled: `r format(Sys.time(), "%B %d, %Y")`'
 csl: acta-astronautica.csl 
 bibliography: Alayna.bib
 link-citations: true
