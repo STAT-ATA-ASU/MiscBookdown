@@ -38,6 +38,7 @@ rn <- rnorm(1000, 100, 15)
 (sd(rn))
 ```
 
+
 The mean of `rn` rounded to two decimal places is `r round(mean(rn),2)`, while the standard deviation of `rn` rounded to two decimal places is `r round(sd(rn),2)`.  In line codes `` ``r ''`r round(mean(rn),2)` `` and `` ``r ''`r round(sd(rn),2)` `` are used to compute and round the mean and standardard deviation of `rn` to two decimal places, respectively.
 
 If you have used $\LaTeX{}$, inserting beautiful mathematics in your documents should not be an issue.  There are some differences when labeling an equation that are needed in **bookdown** [@R-bookdown] so that documents written in R Markdown render properly. To number an equation, enclose the equation in an equation environment and assign a label to the equation using the syntax `(\#eq:label)`. Equation labels must start with the prefix `eq:` in bookdown. To refer to the equation, use the syntax `\@ref(eq:label)`.  For example: 
@@ -470,8 +471,8 @@ covid_data %>%
 ```{r, label = "deaths", fig.cap = "World wide reported COVID-19 deaths by date"}
 covid_data %>% 
   group_by(date) %>% 
-  summarise(dead = sum(dead)) %>% 
-  ggplot(aes(x = date, y = dead)) +
+  summarise(tot_dead = sum(dead)) %>% 
+  ggplot(aes(x = date, y = tot_dead)) +
     geom_line(color = 'red') +
     theme_bw()
 ```
